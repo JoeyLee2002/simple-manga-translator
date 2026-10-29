@@ -1,0 +1,8 @@
+Pillow==12.1.0
+numpy==2.2.6
+opencv-python-headless==4.11.0.86
+PyMuPDF==1.28.0
+reportlab==4.4.9
+rapidocr-onnxruntime==1.4.4
+onnxruntime==1.23.2
+requests==2.32.5
