@@ -86,7 +86,7 @@ def run(project, config, key, stop, emit=lambda *a: None, page_ids=None):
            any(g.get('role')=='dialogue' and not g.get('zh','').strip() for g in project.load_page(p['id'])['groups'])]
     needs_api=any(p.get('status') in {'imported','recognized','error'} or
                   any(g.get('role')=='dialogue' and not g.get('zh','').strip() for g in project.load_page(p['id'])['groups']) for p in pages)
-    if config['engine']!='quick' and needs_api and not key:raise ValueError('请先填写API密钥；不会先空跑整本OCR。')
+    if config['engine']!='quick' and needs_api and not key:raise ValueError('请在引擎设置中填写API密钥。')
     if config['ocr_mode']=='vision' and any(p.get('status')=='imported' for p in pages) and not key:raise ValueError('视觉OCR需要API密钥。')
     budget = Budget(max(1, int(config.get('max_requests', 2000))))
     start = time.monotonic()

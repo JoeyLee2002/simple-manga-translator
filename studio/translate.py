@@ -36,7 +36,7 @@ class Budget:
     def reserve(self):
         with self.lock:
             if self.requests >= self.limit:
-                raise FatalTranslationError('已达到本次请求次数上限，任务已停止继续发出请求。')
+                raise FatalTranslationError('已达到请求上限。')
             self.requests += 1
 
     def add_usage(self, usage):
@@ -107,7 +107,7 @@ def completion(config, key, messages, stop, budget, max_tokens=6000):
         if not isinstance(result,dict):raise ValueError()
         return result
     except (KeyError, IndexError, TypeError, ValueError):
-        raise RuntimeError('模型未返回有效JSON；没有写入部分或错位译文。请重试该页。') from None
+        raise RuntimeError('翻译结果格式错误，请重试该页。') from None
 
 
 class Translator:
@@ -168,10 +168,10 @@ class Translator:
         ids = [x.get('id') for x in values if isinstance(x, dict)]
         if (not all(type(i) is int for i in ids) or len(ids) != len(texts) or
             len(set(ids)) != len(ids) or set(ids) != set(range(len(texts)))):
-            raise RuntimeError('译文ID重复、遗漏或错位，已拒绝整批结果。')
+            raise RuntimeError('译文编号不完整，请重试。')
         mapping = {x['id']: x.get('text') for x in values}
         if any(not isinstance(v, str) or not v.strip() for v in mapping.values()):
-            raise RuntimeError('返回了空译文，已拒绝整批结果。')
+            raise RuntimeError('译文为空，请重试。')
         return [mapping[i].strip() for i in range(len(texts))]
 
     def quick(self, texts):
